@@ -26,6 +26,12 @@ router.get('/book/:isbn', function(req, res, next) {
 
   goodGuy('https://book-catalog-proxy-2.herokuapp.com/book?isbn=' + req.params.isbn).then(function(response) {
     console.log(response.body);
+
+    req.esiOptions = {
+        headers: {
+            'Accept': 'text/html'
+        }
+    };
     var body = JSON.parse(response.body);
 
     //var title = body.items[0].volumeInfo.title;
@@ -40,7 +46,7 @@ router.get('/book/:isbn', function(req, res, next) {
     //res.send(body);
     //res.render('book', {title: title, cover: cover});
     //res.render('book', { title: title, cover: cover, partials: { layout: 'layout_file' } });
-
+    
     var availabilityUrl = (process.env.INVENTORY_SERVICE || 'https://book-inventory-us-prod.herokuapp.com/stock/')+req.params.isbn;
     res.render('book', {
       partials: {
